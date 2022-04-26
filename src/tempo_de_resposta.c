@@ -39,29 +39,47 @@ int calculate_i(task_t tasks[], int r, int k)
 		return ceil((double) r/tasks[k].p) * tasks[k].c + calculate_i(tasks, r, k-1);
 }
 
+// int calculate_rec_r(task_t tasks[], int t, int i)
+// {
+// 	if (t==0||i==0) return tasks[t].c;
+	
+// 	int prev_r = calculate_rec_r(tasks, t, i-1);
+
+// 	// int interf_sum = 0;
+	
+// 	// int k;
+// 	// for (k=0; k<t; k++)
+// 	// 	interf_sum += ceil((double) prev_r/tasks[k].p) * tasks[k].c;
+
+// 	// int this_r = tasks[t].c + interf_sum;
+// 	int this_r = tasks[t].c + calculate_i(tasks, prev_r, t-1);
+
+// 	return (this_r == prev_r) ? this_r : calculate_rec_r(tasks, t, i+1);
+
+// }
+
 int calculate_rec_r(task_t tasks[], int t, int i)
 {
-	if (i==0) return tasks[t].c;
+	int r = tasks[t].c;
+	int prev_r = 0;
 	
-	int prev_r = calculate_rec_r(tasks, t, i-1);
+	while(prev_r != r)
+	{
+		prev_r = r;
+		int sum_i = 0; 
+		int k;
+		for (k=0;k<t; k++)
+			sum_i += ceil((double) prev_r/tasks[k].p) * tasks[k].c;
+		r = tasks[t].c + sum_i;
+	}
 
-	// int interf_sum = 0;
-	
-	// int k;
-	// for (k=0; k<t; k++)
-	// 	interf_sum += ceil((double) prev_r/tasks[k].p) * tasks[k].c;
-
-	// int this_r = tasks[t].c + interf_sum;
-	int this_r = tasks[t].c + calculate_i(tasks, prev_r, t-1);
-
-	return (this_r == prev_r) ? this_r : calculate_rec_r(tasks, t, i+1);
-
+	return r;
 }
 
 void calculate_r(task_t tasks[], int t)
 {
 	tasks[t].r = calculate_rec_r(tasks, t, 0);
-	tasks[t].s = (tasks[t].d > tasks[t].r) ? 'S' : 'N';
+	tasks[t].s = (tasks[t].r <= tasks[t].d) ? 'S' : 'N';
 }
 
 void test_schedule_rt(task_t tasks[], int tsize)
