@@ -68,7 +68,7 @@ int calculate_rec_r(task_t tasks[], int t, int i)
 		prev_r = r;
 		int sum_i = 0; 
 		int k;
-		for (k=0;k<t; k++)
+		for (k=0; k<t; k++)
 			sum_i += ceil((double) prev_r/tasks[k].p) * tasks[k].c;
 		r = tasks[t].c + sum_i;
 	}
