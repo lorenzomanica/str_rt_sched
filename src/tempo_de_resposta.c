@@ -8,6 +8,7 @@
 #define MAX_N 26
 
 typedef struct {
+	int id;
 	int c;
 	int p;
 	int d;
@@ -17,12 +18,26 @@ typedef struct {
 
 
 
-void bubble_sort(task_t t[], int n)
+void priority_sort(task_t t[], int n)
 {
 	int i, j;
 	for (i = 0; i < n-1; i++) {
 		for (j = i+1; j < n; j++) {
 			if (t[i].d > t[j].d) {
+				task_t tmp = t[i];
+				t[i] = t[j];
+				t[j] = tmp;
+			}
+		}
+	}
+}
+
+void arrival_sort(task_t t[], int n)
+{
+	int i, j;
+	for (i = 0; i < n-1; i++) {
+		for (j = i+1; j < n; j++) {
+			if (t[i].id > t[j].id) {
 				task_t tmp = t[i];
 				t[i] = t[j];
 				t[j] = tmp;
@@ -38,25 +53,6 @@ int calculate_i(task_t tasks[], int r, int k)
 	else
 		return ceil((double) r/tasks[k].p) * tasks[k].c + calculate_i(tasks, r, k-1);
 }
-
-// int calculate_rec_r(task_t tasks[], int t, int i)
-// {
-// 	if (t==0||i==0) return tasks[t].c;
-	
-// 	int prev_r = calculate_rec_r(tasks, t, i-1);
-
-// 	// int interf_sum = 0;
-	
-// 	// int k;
-// 	// for (k=0; k<t; k++)
-// 	// 	interf_sum += ceil((double) prev_r/tasks[k].p) * tasks[k].c;
-
-// 	// int this_r = tasks[t].c + interf_sum;
-// 	int this_r = tasks[t].c + calculate_i(tasks, prev_r, t-1);
-
-// 	return (this_r == prev_r) ? this_r : calculate_rec_r(tasks, t, i+1);
-
-// }
 
 int calculate_rec_r(task_t tasks[], int t, int i)
 {
@@ -84,10 +80,11 @@ void calculate_r(task_t tasks[], int t)
 
 void test_schedule_rt(task_t tasks[], int tsize)
 {
-	bubble_sort(tasks, tsize);
+	priority_sort(tasks, tsize);
 	int i;
 	for (i=0; i<tsize; i++)
 		calculate_r(tasks, i);
+	arrival_sort(tasks, tsize);
 }
 
 int main() {
@@ -100,6 +97,7 @@ int main() {
 		if (n==0 || t==0)
 			break;
 		for (i=0; i<n; ++i) {
+			tasks[i].id = i;
 			scanf("%d%d%d",&tasks[i].c,&tasks[i].p,&tasks[i].d);
 		}
 
