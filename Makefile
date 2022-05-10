@@ -14,5 +14,15 @@ test: compile
 	./bin/tempo_de_resposta < input/tresp_8 > result/tresp_8
 	
 
+verify: test
+	diff result/tresp_1 output/tresp_1 | wc -l
+	diff result/tresp_2 output/tresp_2 | wc -l
+	diff result/tresp_3 output/tresp_3 | wc -l
+	diff result/tresp_4 output/tresp_4 | wc -l
+	diff result/tresp_5 output/tresp_5 | wc -l
+	diff result/tresp_6 output/tresp_6 | wc -l
+	diff result/tresp_7 output/tresp_7 | wc -l
+	diff result/tresp_8 output/tresp_8 | wc -l
+
 clean:
 	rm -r bin/*
